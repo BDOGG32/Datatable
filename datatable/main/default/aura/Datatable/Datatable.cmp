@@ -1,0 +1,184 @@
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="global" >
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="showTable" type="Boolean" required="true" default="false"/>
+    <aura:attribute name="columns" type="List" description="this will display the list of columns/fields"/>
+    <aura:attribute name="allowColumnSorting" type="Boolean" description="Control the column sorting"/>
+    <aura:attribute name="allowRowSelection" type="Boolean" description="Control the row selection"/>
+    <aura:attribute name="showRowNumberColumn" type="Boolean" description="Show the row number"/>
+    <aura:attribute name="allowInlineEditing" type="Boolean" description="Show the row number"/>
+    <aura:attribute name="data" type="List" description="Show the data"/>
+    <aura:attribute name="sortDirection" type="String" default="ASC" description="maintain the sorting order"/>
+    <aura:attribute name="columnIndex" type="Integer" description="maintain the sorting order"/>
+    <aura:attribute name="defaultSorting" type="Map" description="sorting params"/>
+    <aura:attribute name="isSorted" type="Boolean" default="true" description="sorting params"/>
+    <aura:attribute name="currentFieldSorted" type="String" description="sorting params"/>
+    <aura:attribute name="renderingCompleted" type="Boolean" description="controlling rendering."/>
+    <aura:attribute name="isCurrentSelectedEdited" type="Boolean" default="false" description="enable the linline editing"/>
+    <aura:attribute name="mouseStart" type="string" />
+    <aura:attribute name="oldWidth" type="string" />
+    <aura:attribute name="currentSelectedValue" type="string" default=""/>
+    <aura:attribute name="selectedValueToChange" type="string" default=""/>
+    <aura:attribute name="preventWindowDefaultClickEvent" type="Boolean" default="false"/>
+    <aura:attribute name="selectedRowData" type="Map" description="field holds the selected row data" />
+    <aura:attribute name="currentSelectedInlineHighlightId" type="string" default="" description="id of current inline editing section"/>
+    <aura:attribute name="currentSelectedInlineId" type="string" default="none" description="id of current inline editing section"/>
+    <aura:attribute name="selectedRowCount" type="Integer" default="0" description="keep count of selected rows"/>
+    <aura:attribute name="selectedRows" type="List" description="keep count of selected rows"/>
+    <aura:attribute name="updatedRecords" type="List" description="holds list of reocrds have been updated."/>
+    <aura:attribute name="keyField" type="String" description="key field to update the records."/>
+    <aura:attribute name="rowAttributes" type="Map" description="formatting for specific row and column"/>
+    <aura:attribute name="groupBy" type="String" default="none" description="field name to group by records"/>
+    <aura:attribute name="groupByData" type="Object" description="field name to group by records"/>
+    <aura:attribute name="groupBySelectedRows" type="List" description="field name to group by records"/>
+    
+    
+    <aura:if isTrue="{!and(v.showTable, v.renderingCompleted)}">
+        <table id="wholeTable" aria-multiselectable="true" class="slds-table slds-table_bordered slds-table_fixed-layout slds-table_resizable-cols" role="grid">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <aura:if isTrue="{!v.showRowNumberColumn}">
+                        <th align="righ" class="datatable-initial-margin slds-text-title_caps slds-text-align_right " scope="col" style="">
+                            <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                <span class="slds-truncate" style="margin-left:6px;" title="row number"></span>
+                            </div>
+                        </th>
+                    </aura:if>
+                    <aura:if isTrue="{!v.allowRowSelection}">
+                        <th class="slds-text-title_caps slds-text-align_right" scope="col" style="width:5.25em;padding-left: 12px">
+                            <!--<ui:inputCheckbox class="checkboxMargin" aura:id="checkAll" label="" click="{!c.selectAll}"/>-->
+                            <div class="slds-form-element">
+                                <div class="slds-form-element__control">
+                                    <div class="slds-checkbox checkboxall">
+                                        <input type="checkbox" aura:id="checkAll" name="options1" id="checkAll" value="false"
+                                               checked="false"
+                                               onchange="{!c.selectAll}"/>
+                                        <label class="slds-checkbox__label" for="checkAll">
+                                            <span class="slds-checkbox_faux"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--<lightning:input type="checkbox" label="Red" name="red" aura:id="checkTest" checked="true"/> -->
+                        </th>
+                    </aura:if>
+                    
+                    <aura:iteration items="{!v.columns}" var="fieldName">
+                        <th aria-label="Name" aria-sort="none" class="slds-text-title_caps slds-has-button-menu slds-is-resizable slds-is-sortable" scope="col" style="{!'width:' + fieldName.width}">
+                            <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" data-fieldname="{!fieldName.columnHeader}"  tabindex="-1" onclick="{!c.sortByColumn}"
+                               onmouseover="{!c.showSortingIcon}" onmouseout="{!c.hideSortingIcon}">
+                                <span class="slds-assistive-text">Sort by: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="{!fieldName.columnHeader}">{!fieldName.columnHeader}</span>
+                                    <aura:if isTrue="{!v.allowColumnSorting}">
+                                        <span id="{!fieldName.columnHeader + 'arrowdown'}" style="visibility:hidden;display:block;" class="slds-icon_container slds-icon-utility-arrowdown">
+                                            <lightning:icon  iconName="utility:arrowdown" alternativeText="{!fieldName.columnHeader}" size="xx-small" data-column='{!fieldName.columnHeader}'/>
+                                        </span>
+                                        <aura:if isTrue="{!and(v.defaultSorting != null, (fieldName.columnHeader==v.defaultSorting.field))}">
+                                            <span id="{!fieldName.columnHeader + 'arrowup'}" style="margin-left:-10px;visibility:'';display:block;" class="slds-icon_container slds-icon-utility-arrowup">
+                                                <lightning:icon  iconName="utility:arrowup" alternativeText="{!fieldName.columnHeader}" size="xx-small" data-column='{!fieldName.columnHeader}'/>
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.defaultSorting!=null, (fieldName.columnHeader!=v.defaultSorting.field))}">
+                                            <span id="{!fieldName.columnHeader + 'arrowup'}" style="margin-left:-10px;visibility:hidden;display:block;" class="slds-icon_container slds-icon-utility-arrowup">
+                                                <lightning:icon  iconName="utility:arrowup" alternativeText="{!fieldName.columnHeader}" size="xx-small" data-column='{!fieldName.columnHeader}'/>
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.defaultSorting == null, (fieldName.columnHeader==v.currentFieldSorted))}">
+                                            <span id="{!fieldName.columnHeader + 'arrowup'}" style="margin-left:-10px;visibility:'';display:block;" class="slds-icon_container slds-icon-utility-arrowup">
+                                                <lightning:icon  iconName="utility:arrowup" alternativeText="{!fieldName.columnHeader}" size="xx-small" data-column='{!fieldName.columnHeader}'/>
+                                            </span>
+                                        </aura:if>
+                                        <aura:if isTrue="{!and(v.defaultSorting==null, (fieldName.columnHeader!=v.currentFieldSorted))}">
+                                            <span id="{!fieldName.columnHeader + 'arrowup'}" style="margin-left:-10px;visibility:hidden;display:block;" class="slds-icon_container slds-icon-utility-arrowup">
+                                                <lightning:icon  iconName="utility:arrowup" alternativeText="{!fieldName.columnHeader}" size="xx-small" data-column='{!fieldName.columnHeader}'/>
+                                            </span>
+                                        </aura:if>
+                                    </aura:if>
+                                </div>
+                            </a>
+                            
+                            <button class="slds-button slds-button_icon slds-th__action-button slds-button_icon-x-small showMenu" aria-haspopup="true" tabindex="-1" title="">
+                                <span class="slds-assistive-text"></span>
+                                <aura:if isTrue="{!not(empty(fieldName.columnAttributes.actions))}">
+                                    <lightning:buttonMenu iconName="utility:chevrondown" menuAlignment="right" variant="container" aura:id="menu"
+                                                          alternativeText="{!fieldName.columnHeader}" onselect="{! c.columnActionClicked }">
+                                        
+                                        <aura:iteration items="{!fieldName.columnAttributes.actions}" var="act">
+                                            <lightning:menuItem value="{!act.action}" label="{!act.label}" prefixIconName="{!act.icon}"  />
+                                        </aura:iteration>
+                                        
+                                    </lightning:buttonMenu>
+                                </aura:if>  
+                            </button>
+                            <div class="slds-resizable">
+                                <input aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-355" max="1000" min="20" tabindex="-1" type="range" />
+                                <span class="slds-resizable__handle" draggable="true" onmousedown="{!c.calculateWidth}" ondrag="{!c.setNewWidth}">
+                                    <span class="slds-resizable__divider"></span>
+                                </span>
+                            </div>
+                        </th>
+                    </aura:iteration>
+                </tr>
+            </thead>
+            
+            <tbody>
+                <aura:if isTrue="true">
+                    <aura:iteration items="{!v.data}" var="groupByDataItem" indexVar="outerindx">
+                        <tr aria-selected="false" class="slds-hint-parent" style="{!if(v.groupBy == 'none','display: none','')}">
+                            <td class="slds-text-align_right" role="gridcell" style="padding: 0px;" colspan="8">
+                                <table id="{!('table-'+outerindx)}"   aria-multiselectable="true"
+                                       class="slds-table slds-table_fixed-layout slds-table_resizable-cols"
+                                       role="grid">
+                                    <tbody>
+                                        <tr aria-selected="false" class="slds-hint-parent">
+                                            <aura:if isTrue="{!v.showRowNumberColumn}">
+                                                <td style="width: 3.9em;text-align: center;" class="" role="gridcell">
+                                                    <span>{!outerindx + 1}</span>
+                                                </td>
+                                            </aura:if>
+                                            <td style="padding-left: 19px;width: 4.85em;" class="slds-text-align_right" role="gridcell">
+                                                <!--<ui:inputCheckbox aura:id="parent" label="" text="{!outerindx}" value="false" click="{!c.handleRowAction}"/>-->
+                                                <div class="slds-form-element">
+                                                    <div class="slds-form-element__control"> 
+                                                        <div class="slds-checkbox">
+                                                            <input type="checkbox" aura:id="{!'parent-'+outerindx}" name="{!outerindx}" id="{!groupByDataItem.chkboxid}" value="{!groupByDataItem.isSelected}"
+                                                                   checked="{!groupByDataItem.isSelected}"
+                                                                   onClick="{!c.selectChildNodes}"
+                                                                   onchange= "{!c.selectChildNodes}"/>
+                                                            <label class="slds-checkbox__label" for="{!groupByDataItem.chkboxid}">
+                                                                <span class="slds-checkbox_faux"></span>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td data-label="Opportunity Name">
+                                                <div class="slds-truncate" title="Cloudhub">{!groupByDataItem.groupByFieldValue}</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                        <aura:iteration items="{!groupByDataItem}" var="dataitem" indexVar="indx">
+                            <c:groupByRows tableRows="{!dataitem}" showRowNumberColumn="{!v.showRowNumberColumn}"
+                                           sNo="{!indx}" data="{!v.data}"
+                                           allowInlineEditing="{!v.allowInlineEditing}"
+                                           groupBySelectedRows="{!v.groupBySelectedRows}"
+                                           currentSelectedInlineId="{!v.currentSelectedInlineId}"
+                                           extSNO="{!outerindx}"
+                                           selectedRowCount="{!v.selectedRowCount}"
+                                           groupBy="{!v.groupBy}"
+                                           preventWindowDefaultClickEvent="{!v.preventWindowDefaultClickEvent}"
+                                           currentSelectedInlineHighlightId="{!v.currentSelectedInlineHighlightId}"
+                                           isCurrentSelectedEdited="{!v.isCurrentSelectedEdited}"
+                                           currentSelectedValue="{!v.currentSelectedValue}"
+                                           selectedValueToChange="{!v.selectedValueToChange}"/>
+                        </aura:iteration>
+                    </aura:iteration>
+                </aura:if>
+            </tbody>
+        </table>
+    </aura:if>
+</aura:component>

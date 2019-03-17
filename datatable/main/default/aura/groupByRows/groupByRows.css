@@ -1,0 +1,17 @@
+.THIS .text-ellipsis{
+    text-overflow: ellipsis;
+    width: 100%;
+}
+.THIS .text-ellipsis a,
+.THIS .text-ellipsis-date{
+    text-overflow: ellipsis;
+    width: 100%;
+    display: block;
+    overflow: hidden;
+}
+.THIS .noPadding{
+    padding: 0;
+}
+.THIS .showEditIcon:hover .edit-icon {
+    visibility: visible;
+}

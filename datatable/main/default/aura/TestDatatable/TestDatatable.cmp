@@ -1,42 +1,16 @@
-## Lightning Datatable
-###### Version: 0.1.0
-###### Salesforce Lightning Component
-\
-Lightning datatable component added with some customisation. It has two features
-1. Single table with inline editing, column action, cell action.
-2. Nested table with group-by feature.
+<aura:component implements="flexipage:availableForAllPageTypes,force:appHostable" access="global"  >
+   <div class="slds-grid slds-wrap">
+       <div class="slds-col slds-size_1-of-1">
+        <span>
 
-## Attributes
-It has following attributes.
-
-Attribute| Type|Required|Default|Description
--------- | ----|--------|-------|-----------|
-showTable| boolean|Yes|	false|display the table
-columns | list|||this will display the list of columns/fields
-allowColumnSorting | boolean|||enable the sorting
-allowRowSelection | boolean|||Control the row selection
-showRowNumberColumn | boolean|||Show the row number
-allowInlineEditing | boolean|||enable the inline editing
-data | list|||Data to be display
-sortDirection | String||ASC|maintain the sorting order
-defaultSorting | map|||specify the default sorting params
-defaultSorting | map|||specify the default sorting params
-selectedRowData | map|||selected row data can be accessed by this Attribute
-groupBySelectedRows | map|||selected row data when group-by can be accessed by this Attribute
-groupBy | String|||Name of the group by field
-keyField | String|||Name of the key field
-rowAttributes | map|||formatting for specific row and column
-
-## Usage
-```Python
-<c:Datatable showTable="true"
+    <c:Datatable showTable="true"
                   allowColumnSorting="true"
                   allowRowSelection="true"
                   showRowNumberColumn="true"
                   allowInlineEditing="true"
                   keyField= "Name"
                   groupBy="Name"
-                  defaultSorting="{
+                  defaultSorting="{ 
                                     field:'Name',
                                     direction: 'ASC'
                                   }"
@@ -124,6 +98,25 @@ rowAttributes | map|||formatting for specific row and column
                                     }}"
                   data= "[
                          {Date: '2019-01-23',Name:'Dave',Email:'Dave@gmail.com',Amount:'9834',Link:'www.gmail.com',Phone:'12328287896'},
+                         {Date: '2019-05-14',Name:'Dave',Email:'kurt@gmail.com',Amount:'3838',Link:'www.apple.com',Phone:'0983837896'},
+                         {Date: '2019-05-15',Name:'John',Email:'john@gmail.com',Amount:'2929',Link:'www.apple.com',Phone:'0983867896'},
+                         {Date: '2019-05-16',Name:'Abigail',Email:'Abigail@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'},
+                         {Date: '2019-05-16',Name:'Alice',Email:'Alexandra@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'},
+                         {Date: '2019-05-16',Name:'Alice',Email:'Alice@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'},
+                         {Date: '2019-01-23',Name:'Alyssa',Email:'Alyssa@gmail.com',Amount:'9834',Link:'www.gmail.com',Phone:'12328287896'},
+                         {Date: '2019-05-14',Name:'Caroline',Email:'Amber@gmail.com',Amount:'3838',Link:'www.apple.com',Phone:'0983837896'},
+                         {Date: '2019-05-15',Name:'Amelia',Email:'Amelia@gmail.com',Amount:'2929',Link:'www.apple.com',Phone:'0983867896'},
+                         {Date: '2019-05-16',Name:'Amy',Email:'Amy@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'},
+                         {Date: '2019-05-16',Name:'Anna',Email:'Anna@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'},
+                         {Date: '2019-05-16',Name:'Caroline',Email:'Anastasia@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'},
+                         {Date: '2019-01-23',Name:'Caroline',Email:'Angelina@gmail.com',Amount:'9834',Link:'www.gmail.com',Phone:'12328287896'},
+                         {Date: '2019-05-14',Name:'Ashley',Email:'Ashley@gmail.com',Amount:'3838',Link:'www.apple.com',Phone:'0983837896'},
+                         {Date: '2019-05-15',Name:'Alice',Email:'Audrey@gmail.com',Amount:'2929',Link:'www.apple.com',Phone:'0983867896'},
+                         {Date: '2019-05-16',Name:'Alice',Email:'Belinda@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'},
+                         {Date: '2019-05-16',Name:'Dave',Email:'Caitlin@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'},
+                         {Date: '2019-05-16',Name:'Caroline',Email:'Caroline@gmail.com',Amount:'4484',Link:'www.apple.com',Phone:'09822727296'}
                          ]"/>
-
-```
+    </span>
+      </div>
+    </div>
+</aura:component>

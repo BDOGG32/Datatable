@@ -1,0 +1,137 @@
+.THIS.uiMenu {
+    margin: 20px;
+    left:0px;
+}
+.THIS .uiMenuListcls{
+    left:0%;
+}
+.THIS .textClipping{
+  white-space: nowrap;
+  /*width: 50px; */
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+/* dropdown2 is for the rest of the dropdown menus. */
+.THIS .dropbtn2{
+    /*background-color: #444444;*/
+    /*color: #FFFFFF;*/
+    margin: 0 1px 0 0;
+    padding: 4px 3px;
+    width: auto;
+    font: bold 10px arial;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    text-decoration: none;
+    border: none;
+}
+.THIS .dropbtn2:hover{
+    /*background-color: #000066;*/
+    border: none;
+}
+.THIS .dropbtn2:focus{
+    background-color: #000066;
+    border: none;
+}
+.THIS .dropdown2{
+    position: relative;
+    display: inline-block;
+    z-index: 30;
+}
+.THIS .dropdown2-content{
+    display: none;
+    position: absolute;
+    padding: 0px;
+    width: auto;
+    min-width: 160px;
+    white-space: nowrap;
+    background: #DDDDDD;
+    overflow: auto;
+    z-index: 1;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #000000;
+}
+.THIS .dropdown2-content a{
+    color: #000000;
+    padding: 2px 3px;
+    font: 10px arial;
+    display: block;
+}
+.THIS .dropdown2 a:hover {
+    /*background: #000066;*/
+    /*color: #FFF;*/
+    border: none;
+    text-decoration: none;
+}
+.THIS .show{
+    display:block;
+}
+.THIS .icon{
+	/*margin-top: -2px;*/
+    display: inline-flex;
+}
+.THIS .checkboxall{
+	width:43px;
+}
+.THIS .checkboxMargin {
+    margin-left:8px;
+}
+.THIS .showMenu {
+    z-index: 9999;
+    top: 31%;
+    right: 1.25rem;
+}
+.THIS .set-position {
+    position:relative;
+}
+.THIS .ddl {
+    display: inline-block;
+}
+.THIS .ddl .slds-dropdown {
+    position:relative;
+}
+tr:hover.THIS {
+    background-color: #ff0000;
+}
+
+.THIS.tr:hover td {
+    background-color: #ff0000;
+}
+
+.THIS .checkboxMargin {
+    margin-top:5px;
+}
+
+.THIS .formElementMargin {
+    display: inline-flex;
+    margin-top: 10px;
+    border-bottom: 11px;
+}
+.THIS .is-cell-editing {
+    background-color:#D4ECFF;
+}
+
+.THIS td:hover{
+    background-color:#00ff00;
+}
+.THIS .edit-btn-pos {
+    position:relative;
+    padding-right:25px;
+}
+.THIS .edit-icon {
+    display:inline-flex;
+    display:block;
+    visibility:hidden;
+    position:absolute;
+    right:20px;
+}
+
+.THIS .column-action-pos {
+    position: absolute;
+    right: 0;
+}
+.THIS .datatable-initial-margin{
+    text-align:right;
+    width:4.25em;
+}

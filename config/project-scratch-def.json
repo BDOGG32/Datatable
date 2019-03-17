@@ -1,0 +1,7 @@
+{
+    "orgName": "Mecano Consulting",
+    "edition": "Developer",
+    "orgPreferences" : {
+        "enabled": ["S1DesktopEnabled"]
+    }
+}
